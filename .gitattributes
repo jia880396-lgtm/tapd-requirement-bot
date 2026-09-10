@@ -1,0 +1,7 @@
+# 自动归一化文本文件换行符（跨平台协作）
+* text=auto
+
+# Windows 脚本保持 CRLF，避免执行出错
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.vbs text eol=crlf

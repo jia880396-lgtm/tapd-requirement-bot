@@ -1,0 +1,60 @@
+TAPD需求智能处理Bot - 部署说明
+
+一、准备环境
+1. 安装 Python 3.11 或更高版本，安装时勾选 Add Python to PATH。
+2. 安装 Node.js 18 或更高版本（仅首次构建前端需要）。
+3. 将本项目完整解压到不含空格的目录，例如 tapd-requirement-bot。
+
+二、一键安装
+双击运行 install_new_pc.bat。
+脚本会自动完成：
+- 创建 Python 虚拟环境（backend\.venv）
+- 安装 Python 依赖（requirements.txt）
+- 安装前端依赖（npm install）
+- 构建前端并部署到 backend\static_dist
+
+三、配置 Key（必做）
+用记事本打开 backend\.env（如没有则从 .env.example 复制一份），填入以下 3 个 Key：
+
+  1. TAPD_AUTH_TOKEN（必填）
+     TAPD 公司管理 → API 账号 → 复制 API Token（40位十六进制字符串）
+
+  2. DEEPSEEK_API_KEY（必填）
+     大模型 API Key，支持百炼、DeepSeek 等兼容 OpenAI 格式的服务
+
+  3. VISION_API_KEY（可选）
+     智谱 AI 控制台创建，用于需求截图的文字识别增强
+
+其他配置项说明：
+- TAPD_WORKSPACE_IDS：TAPD 项目工作空间 ID
+- STORY_STATUS_FILTER：需求拉取的状态过滤（如 status_2）
+- STORY_STATUS_DUPLICATE：重复需求标记对应的状态值
+- CUSTOM_FIELD_*：TAPD 自定义字段编号，需根据实际项目调整
+- SCORING_STRICTNESS：评分标准，loose=宽松 / strict=严格
+
+四、启动
+双击 start_new_pc.bat（或 scripts\start_server.bat）。
+本机访问：http://localhost:8030
+局域网访问：http://本机IP:8030（先在命令行运行 ipconfig 查看 IPv4 地址）
+
+五、让其他人访问
+1. 确保其他电脑与本机器在同一局域网。
+2. Windows 防火墙放行 TCP 8030：双击 allow_firewall_8030.bat（需管理员权限）。
+3. 将 http://局域网IP:8030 发给其他人即可访问。
+
+六、停止/重启
+- stop_new_pc.bat：停止服务
+- restart_new_pc.bat：重启服务
+
+七、默认账号
+管理员账号：admin / admin123（请登录后立即修改密码）
+
+八、如果安装中断
+在项目目录打开命令行，手动执行：
+  cd backend
+  .venv\Scripts\python.exe -m pip install -r requirements.txt
+  cd ..\frontend
+  npm install
+  npm run build
+  xcopy dist ..\backend\static_dist\ /E /I /Y
+然后双击 start_new_pc.bat。
